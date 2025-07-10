@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="ur_robot">
+
+    <xacro:property name="ur_type" value="$(arg ur_type)" />
+    <!-- Include the standard UR robot -->
+    <xacro:include filename="$(find ur_description)/urdf/ur.urdf.xacro" />
+    <xacro:ur_robot ur_type="${ur_type}" prefix="${prefix}" />
+
+    <!-- Include the blackberry macro-->
+    <xacro:include filename="$(find easy_ur)/urdf/.xacro" />
+
+    <!-- Call the macro to add probe -->
+    <xacro:add_blackberry />
+
+</robot>
