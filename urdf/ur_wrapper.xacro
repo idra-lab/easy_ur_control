@@ -1,15 +1,17 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="ur_robot">
 
-    <xacro:property name="ur_type" value="$(arg ur_type)" />
+
     <!-- Include the standard UR robot -->
     <xacro:include filename="$(find ur_description)/urdf/ur.urdf.xacro" />
-    <xacro:ur_robot ur_type="${ur_type}" prefix="${prefix}" />
 
-    <!-- Include the blackberry macro-->
-    <xacro:include filename="$(find easy_ur)/urdf/.xacro" />
-
-    <!-- Call the macro to add probe -->
-    <xacro:add_blackberry />
+    <!-- Include your custom gripper and add the joint to connect to it, then go to the
+    ur_controllers.yaml and change the ee link in the controller parameters -->
+    <!-- <xacro:include filename="$(find gripper_description)/urdf/ur_gripper.xacro" /> -->
+    <!-- <joint name="example_gripper_joint" type="fixed">
+        <parent link="tool0" />
+        <child link="gripper_link" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint> -->
 
 </robot>

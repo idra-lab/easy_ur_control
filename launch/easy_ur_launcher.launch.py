@@ -53,10 +53,9 @@ def launch_setup(context, *args, **kwargs):
     )
     kinematics_params = PathJoinSubstitution(
         [
-            FindPackageShare(description_package),
+            FindPackageShare("easy_ur_control"),
             "config",
-            ur_type,
-            "robot_calibration.yaml",
+            "calibration.yaml",
         ]
     )
     physical_params = PathJoinSubstitution(
@@ -92,9 +91,8 @@ def launch_setup(context, *args, **kwargs):
     # Path to my XACRO file
     xacro_file = PathJoinSubstitution(
         [
-            FindPackageShare("easy_ur"),
-            "ur_wrapper",
-            LaunchConfiguration("description_file"),
+            FindPackageShare("easy_ur_control"),
+            "urdf/ur_wrapper.xacro",  # Custom XACRO file
         ]
     )
 
@@ -199,11 +197,11 @@ def launch_setup(context, *args, **kwargs):
     }
 
     initial_joint_controllers = PathJoinSubstitution(
-        [FindPackageShare("easy_ur"), "config", controllers_file]
+        [FindPackageShare("easy_ur_control"), "config", controllers_file]
     )
 
     rviz_config_file = PathJoinSubstitution(
-        [FindPackageShare(description_package), "rviz", "view_robot.rviz"]
+        [FindPackageShare("easy_ur_control"), "rviz", "rviz.rviz"]
     )
 
     # define update rate
