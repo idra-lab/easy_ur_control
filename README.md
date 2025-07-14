@@ -2,11 +2,12 @@
 This repository provides a simple and easy-to-use guide and a ROS2 package to control the Universal Robot robots using the Universal Robot ROS2 driver.
 
 # 📦 Installation
+**Note: currenly this repo only support ROS2 humble since official driver files are a bit different in jazzy**
 1. Install ROS2 dependencies:
    ```bash
-   sudo apt install ros-<distro>-ur-* ros-<distro>-ros2-control ros-<distro>-ros2-controllers
+   sudo apt install ros-humble-ur-* ros-humble-ros2-control ros-humble-ros2-controllers
    ```
-2. Define your workspace locatoin and create ros2 workspace:
+2. Define your workspace location and create ros2 workspace:
    ```bash
    export ROS2_WS=~/ros2_ws # or any other location you prefer
    mkdir -p ${ROS2_WS}/src
@@ -16,20 +17,20 @@ This repository provides a simple and easy-to-use guide and a ROS2 package to co
     ```bash
     git clone https://github.com/idra-lab/easy_ur_control.git
     ```
-4. Remember to source the workspace after building:
-   ```bash
-   source ${ROS2_WS}/install/setup.bash
-   ```
-5. Connect to the robot via ethernet, make sure the robot is powered on and connected to the same network as your computer. You can check the robot's IP address on the teach pendant (tablet) pressing `Top left options button`->`Impostazioni`->`Sistema`->`Rete` and read `Indirizzo IP` and then usually just set yours as the same +1 in the last digit.  
+4. Connect to the robot via ethernet, make sure the robot is powered on and connected to the same network as your computer. You can check the robot's IP address on the teach pendant (tablet) pressing `Top left options button`->`Settings`->`System`->`Network` and read `IP Address` and then usually just set yours as the same +1 in the last digit. Also annoate the robot ip address, you will need it later.
    *For example, if the robot's IP is `192.168.1.100`, you can set your computer's IP to `192.168.1.101` with the same subnet mask `255.255.255.0`*
-6. Calibrate the robot and save the calibration data in the config folder of this package:
+5. Calibrate the robot and save the calibration data in the config folder of this package, set the robot IP address you noted before:
    ```bash
-   ros2 launch ur_calibration calibration_correction.launch.py robot_ip:=192.168.100.14 target_filename:="${ROS2_WS}/src/easy_ur_control/config/calibration.yaml"
+   ros2 launch ur_calibration calibration_correction.launch.py robot_ip:=<robot_ip> target_filename:="${ROS2_WS}/src/easy_ur_control/config/calibration.yaml"
    ```
-4. Build the workspace:
+6. Build the workspace:
    ```bash
    cd ${ROS2_WS}
    colcon build --symlink-install
+   ```
+7. Remember to source the workspace after building:
+   ```bash
+   source ${ROS2_WS}/install/setup.bash
    ```
 ## 🕹 Cartesian Control
 If you want to control the robot end effector in Cartesian space, you need to perform inverse kinematics to compute the joint angles from the desired end effector pose.  
@@ -63,7 +64,7 @@ ros2 run rqt_controller_manager rqt_controller_manager
 ```
 Installable with:
 ```
-sudo apt install ros-<distro>-rqt-controller-manager
+sudo apt install ros-humble-rqt-controller-manager
 ```
 2. Select the `motion_control_handle` controller and click on `Start`
 
