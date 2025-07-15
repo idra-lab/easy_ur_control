@@ -71,17 +71,26 @@ def launch_setup(context, *args, **kwargs):
         launch_arguments={
             "ur_type": LaunchConfiguration("ur_type"),
             "robot_ip": LaunchConfiguration("robot_ip"),
-            "description_package": "easy_ur_control",
-            "description_file": "ur_wrapper.xacro",
-            "kinematics_params_file": PathJoinSubstitution(
-                [FindPackageShare("easy_ur_control"), "config", "calibration.yaml"]
-            ),
             "headless_mode": "true",
             "rviz_config_file": "easy_ur_control",
             "runtime_config_package": "easy_ur_control",
-            "rviz_config_file": "config/ur_rviz_config.rviz",
+            # "rviz_config_file": "config/ur_rviz_config.rviz",
             # disable joint controller activation so we can activate our custom controllers from this launch file
+            "controllers_file": PathJoinSubstitution(
+                [
+                    FindPackageShare("easy_ur_control"),
+                    "config",
+                    "ur_controllers.yaml",
+                ]
+            ),
             "activate_joint_controller": "false",
+            "description_launchfile": PathJoinSubstitution(
+                [
+                    FindPackageShare("easy_ur_control"),
+                    "launch",
+                    "rsp.launch.py",
+                ]
+            ),
         }.items(),
     )
     controller = LaunchConfiguration("ctrl").perform(context)
