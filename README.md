@@ -1,8 +1,7 @@
 # Easy Universal Robot Control
 This repository provides a simple and easy-to-use guide and a ROS2 package to control the Universal Robot robots using the Universal Robot ROS2 driver.
-
-# 📦 Installation
 **Note: currenly this repo only support ROS2 humble since official driver files are a bit different in jazzy**
+# 📦 Installation
 1. Install ROS2 dependencies:
    ```bash
    sudo apt install ros-humble-ur-* ros-humble-ros2-control ros-humble-ros2-controllers
@@ -50,22 +49,16 @@ source ~/controller_ws/install/setup.bash
 ```
 
 ## 🚀 Start controlling the robot
-1. Put the robot in `Remote Control` mode from the teach pendant (tablet) pressing `Top left options button`->`Locale`->`Controllo remoto`
-2. Run the prepared launch file
+1. Put the robot in `Remote Control` mode from the teach pendant (tablet) pressing `Top left options button`->`Local`->`Remote Control`
+2. Run the prepared launch file:
+Different control techniques are supported:
+   - [Cartesian control](https://github.com/fzi-forschungszentrum-informatik/cartesian_controllers/tree/ros2/cartesian_motion_controller): `ctrl:=cartesian_motion_controller`
+   - [Simulated cartesian impedance control](https://github.com/fzi-forschungszentrum-informatik/cartesian_controllers/tree/ros2/cartesian_compliance_controller): `ctrl:=cartesian_compliance_controller`
+   - [Joint trajectory control](https://wiki.ros.org/scaled_joint_trajectory_controller): `ctrl:=scaled_joint_trajectory_controller`
 ```
-ros2 launch easy_ur_control easy_ur_launcher.launch.py robot_ip:=<robot_ip> ur_type:=<ur_type> # ur3e, ur5e, ur10e, ur16e
+ros2 launch easy_ur_control easy_ur_launcher.launch.py robot_ip:=<robot_ip> ur_type:=<ur_type> ctrl:=<control-method> # ur3e, ur5e, ur10e, ur16e
 ```
-
-## Move the robot via Rviz
-You can move the robot using the Rviz interface, by mean of the `motion_control_handle` controller.
-1. Launch the motion control handle with the `rqt_controller_gui`
-```
-ros2 run rqt_controller_manager rqt_controller_manager
-```
-Installable with:
-```
-sudo apt install ros-humble-rqt-controller-manager
-```
-2. Select the `motion_control_handle` controller and click on `Start`
-
-TODO...
+3. Publish your command on topic:
+   - Cartesian control receives commands on `/cartesian_motion_controller/target_frame`
+   - Simulated cartesian impedance control receives commands on `/cartesian_compliance_controller/target_frame`
+   - Joint position control receives commands on `/scaled_joint_trajectory_controller/joint_trajectory`
