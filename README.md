@@ -1,6 +1,7 @@
 # Easy Universal Robot Control
-This repository provides a simple and easy-to-use guide and a ROS2 package to control the Universal Robot robots using the Universal Robot ROS2 driver.
-**Note: currenly this repo only support ROS2 humble since official driver files are a bit different in jazzy**
+This repository provides a simple and easy-to-use guide and a ROS2 package to control the Universal Robot robots using the Universal Robot ROS2 driver.  
+
+**Note: currenly this repo only support ROS2 humble since official driver files are a bit different in jazzy**  
 # 📦 Installation
 1. Install ROS2 dependencies:
    ```bash
