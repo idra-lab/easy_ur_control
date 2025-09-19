@@ -82,6 +82,7 @@ def launch_setup(context, *args, **kwargs):
             "rviz_config_file": "config/ur_rviz_config.rviz",
             # disable joint controller activation so we can activate our custom controllers from this launch file
             "activate_joint_controller": "false",
+            # "initial_joint_controller": "joint_trajectory_controller",
         }.items(),
     )
     controller = LaunchConfiguration("ctrl").perform(context)
@@ -91,6 +92,10 @@ def launch_setup(context, *args, **kwargs):
         arguments=[controller, "-c", "/controller_manager"],
         remappings=[
             ("/cartesian_motion_controller/target_frame", "/target_frame"),
+            ("/cartesian_compliance_controller/target_frame", "/target_frame"),
+            ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
+            ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
+            ("/cartesian_force_controller/target_frame", "/target_frame"),
         ],
     )
 

@@ -48,6 +48,31 @@ Remember to source the workspace after building:
 ```bash
 source ~/controller_ws/install/setup.bash
 ```
+Finally you need to modify the `ur_robot_driver` packages to include topics remapping so that your controller knows the right topic for the force/torque readings and the input pose topic. You can do this by editing the `/opt/ros/humble/share/ur_robot_driver/launch/ur_control.launch.py ` file and adding the following lines to the `ur_control_node` definition:
+```python
+    # Remap for force/torque sensor
+    ur_control_node = Node(
+        package="ur_robot_driver",
+        executable="ur_ros2_control_node",
+        parameters=[
+            robot_description,
+            update_rate_config_file,
+            ParameterFile(initial_joint_controllers, allow_substs=True),
+        ],
+        ## ADD THIS PART
+        remappings=[
+            ("/cartesian_motion_controller/target_frame", "/target_frame"),
+            ("/cartesian_compliance_controller/target_frame", "/target_frame"),
+            ("/cartesian_compliance_controller/ft_sensor_wrench","/force_torque_sensor_broadcaster/wrench"),
+            ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
+            ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
+            ("/cartesian_force_controller/target_frame", "/target_frame"),
+        ],
+        ##
+        output="screen",
+        condition=UnlessCondition(use_fake_hardware),
+    )
+```
 
 ## 🚀 Start controlling the robot
 1. Put the robot in `Remote Control` mode from the teach pendant (tablet) pressing `Top left options button`->`Local`->`Remote Control`

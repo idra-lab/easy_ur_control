@@ -31,9 +31,6 @@ controller_manager:
     freedrive_mode_controller:
       type: ur_controllers/FreedriveModeController
 
-    passthrough_trajectory_controller:
-      type: ur_controllers/PassthroughTrajectoryController
-
     tcp_pose_broadcaster:
       type: pose_broadcaster/PoseBroadcaster
 
@@ -214,7 +211,7 @@ cartesian_compliance_controller:
     # controllers will build a kinematic chain from this link up to
     # end_effector_link.  It's also the reference frame for the superposition
     # of error components in all controllers.
-    robot_base_link: "$(var tf_prefix)base_link"
+    robot_base_link: "base_link"
 
     # This is the URDF link of your sensor. Sensor signals are assumed to be
     # given in this frame.  It's important that this link is located somewhere
@@ -234,12 +231,12 @@ cartesian_compliance_controller:
     compliance_ref_link: "tool0"
 
     joints:
-      - $(var tf_prefix)shoulder_pan_joint
-      - $(var tf_prefix)shoulder_lift_joint
-      - $(var tf_prefix)elbow_joint
-      - $(var tf_prefix)wrist_1_joint
-      - $(var tf_prefix)wrist_2_joint
-      - $(var tf_prefix)wrist_3_joint
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
 
     # Choose between position or velocity.  In fact, the controllers allow to
     # set both at the same time, but not all drivers will support this.
