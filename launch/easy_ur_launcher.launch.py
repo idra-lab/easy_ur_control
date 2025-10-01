@@ -1,12 +1,15 @@
+import os.path
 from launch import LaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.substitutions import FindPackageShare
 from launch.substitutions import PathJoinSubstitution
 from launch.actions import IncludeLaunchDescription
 from launch.actions import DeclareLaunchArgument
+from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch.actions import OpaqueFunction
+from ament_index_python.packages import get_package_share_path
 
 
 def declare_args():
@@ -38,6 +41,22 @@ def declare_args():
                 "joint_trajectory_controller",
                 "cartesian_force_controller",
             ],
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "rviz",
+            description="Whether to start or not RViz2",
+            default_value="true",
+        )
+    )
+    this_package_share = get_package_share_path("easy_ur_control")
+    default_rviz_path = os.path.join(this_package_share, "rviz", "rviz.rviz")
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "rviz_config",
+            description="Full path of the RViz2 config",
+            default_value=default_rviz_path,
         )
     )
     return declared_arguments
@@ -77,13 +96,18 @@ def launch_setup(context, *args, **kwargs):
                 [FindPackageShare("easy_ur_control"), "config", "calibration.yaml"]
             ),
             "headless_mode": "true",
-            "rviz_config_file": "easy_ur_control",
             "runtime_config_package": "easy_ur_control",
-            "rviz_config_file": "config/ur_rviz_config.rviz",
+            "launch_rviz": "false",
             # disable joint controller activation so we can activate our custom controllers from this launch file
             "activate_joint_controller": "false",
             # "initial_joint_controller": "joint_trajectory_controller",
         }.items(),
+    )
+    rviz_spawner = Node(
+        package="rviz2",
+        executable="rviz2",
+        arguments=["-d", LaunchConfiguration("rviz_config")],
+        condition=IfCondition(LaunchConfiguration("rviz")),
     )
     controller = LaunchConfiguration("ctrl").perform(context)
     controller_spawner = Node(
@@ -102,6 +126,7 @@ def launch_setup(context, *args, **kwargs):
     return [
         base_launch,
         controller_spawner,
+        rviz_spawner,
     ]
 
 
