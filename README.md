@@ -67,6 +67,7 @@ Finally you need to modify the `ur_robot_driver` packages to include topics rema
             ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
             ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
             ("/cartesian_force_controller/target_frame", "/target_frame"),
+            ("/motion_control_handle/target_frame", "/target_frame"),
         ],
         ##
         output="screen",
@@ -88,3 +89,36 @@ ros2 launch easy_ur_control easy_ur_launcher.launch.py robot_ip:=<robot_ip> ur_t
    - Cartesian control receives commands on `/cartesian_motion_controller/target_frame`
    - Simulated cartesian impedance control receives commands on `/cartesian_compliance_controller/target_frame`
    - Joint position control receives commands on `/scaled_joint_trajectory_controller/joint_trajectory`
+
+### Using fake hardware
+
+For a simple simulation of your executable, you can easily use a fake hardware configuration which doesn't connect to the robot. Simply call
+```
+ros2 launch easy_ur_control easy_ur_launcher.launch.py use_fake_hardware:=true ur_type:=<ur_type>  # and additional arguments
+```
+
+**Note:** if you want to correctly use the cartesian control with the fake hardware, you must set the corresponding remappings in the `control_node` definition in `/opt/ros/humble/share/ur_robot_driver/launch/ur_control.launch.py`;
+
+```python
+    control_node = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[
+            robot_description,
+            update_rate_config_file,
+            ParameterFile(initial_joint_controllers, allow_substs=True),
+        ],
+        # Import these mappings:
+        remappings=[
+            ("/cartesian_motion_controller/target_frame", "/target_frame"),
+            ("/cartesian_compliance_controller/target_frame", "/target_frame"),
+            ("/cartesian_compliance_controller/ft_sensor_wrench","/force_torque_sensor_broadcaster/wrench"),
+            ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
+            ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
+            ("/cartesian_force_controller/target_frame", "/target_frame"),
+            ("/motion_control_handle/target_frame", "/target_frame"),
+        ],
+        output="screen",
+        condition=IfCondition(use_fake_hardware),
+    )
+```
