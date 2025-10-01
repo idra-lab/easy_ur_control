@@ -8,10 +8,6 @@ This repository provides a simple and easy-to-use guide and a ROS2 package to co
    <a href='https://github.com/idra-lab/easy_ur_control/actions/workflows/Jazzy.yml'><img src='https://github.com/idra-lab/easy_ur_control/actions/workflows/Jazzy.yml/badge.svg'></a>
 </div>
 
-
-
-
-**Note: currenly this repo only support ROS2 humble since official driver files are a bit different in jazzy**  
 # 📦 Installation
 1. Install ROS2 dependencies:
    ```bash
