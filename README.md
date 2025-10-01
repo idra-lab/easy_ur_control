@@ -1,6 +1,16 @@
 # Easy Universal Robot Control
 This repository provides a simple and easy-to-use guide and a ROS2 package to control the Universal Robot robots using the Universal Robot ROS2 driver.  
 
+## Supported ROS distros
+
+<div align="center">
+   <a href='https://github.com/idra-lab/easy_ur_control/actions/workflows/Humble.yml'><img src='https://github.com/idra-lab/easy_ur_control/actions/workflows/Humble.yml/badge.svg'></a>
+   <a href='https://github.com/idra-lab/easy_ur_control/actions/workflows/Jazzy.yml'><img src='https://github.com/idra-lab/easy_ur_control/actions/workflows/Jazzy.yml/badge.svg'></a>
+</div>
+
+
+
+
 **Note: currenly this repo only support ROS2 humble since official driver files are a bit different in jazzy**  
 # 📦 Installation
 1. Install ROS2 dependencies:
