@@ -76,6 +76,25 @@ def launch_setup(context, *args, **kwargs):
         context.launch_configurations["ctrl"],
         print_reset,
     )
+    base_launch_arguments={
+        "ur_type": LaunchConfiguration("ur_type"),
+        "robot_ip": LaunchConfiguration("robot_ip"),
+        "description_package": "easy_ur_control",
+        "description_file": "ur_wrapper.xacro",
+        "headless_mode": "true",
+        "runtime_config_package": "easy_ur_control",
+        "launch_rviz": "false",
+        # disable joint controller activation so we can activate our custom controllers from this launch file
+        "activate_joint_controller": "false",
+        # "initial_joint_controller": "joint_trajectory_controller",
+    }
+
+    this_package_share = get_package_share_path("easy_ur_control")
+    calibration_file = os.path.join(this_package_share, "config", "calibration.yaml")
+    if os.path.exists(calibration_file):
+        print("Using calibration data from", calibration_file)
+        base_launch_arguments["kinematics_params_file"] = calibration_file
+
     base_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
@@ -87,21 +106,7 @@ def launch_setup(context, *args, **kwargs):
             )
         ),
         # override the default launch arguments to point to the easy_ur_control package
-        launch_arguments={
-            "ur_type": LaunchConfiguration("ur_type"),
-            "robot_ip": LaunchConfiguration("robot_ip"),
-            "description_package": "easy_ur_control",
-            "description_file": "ur_wrapper.xacro",
-            "kinematics_params_file": PathJoinSubstitution(
-                [FindPackageShare("easy_ur_control"), "config", "calibration.yaml"]
-            ),
-            "headless_mode": "true",
-            "runtime_config_package": "easy_ur_control",
-            "launch_rviz": "false",
-            # disable joint controller activation so we can activate our custom controllers from this launch file
-            "activate_joint_controller": "false",
-            # "initial_joint_controller": "joint_trajectory_controller",
-        }.items(),
+        launch_arguments=base_launch_arguments.items(),
     )
     rviz_spawner = Node(
         package="rviz2",
