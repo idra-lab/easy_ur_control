@@ -58,32 +58,6 @@ Remember to source the workspace after building:
 ```bash
 source ~/controller_ws/install/setup.bash
 ```
-Finally you need to modify the `ur_robot_driver` packages to include topics remapping so that your controller knows the right topic for the force/torque readings and the input pose topic. You can do this by editing the `/opt/ros/humble/share/ur_robot_driver/launch/ur_control.launch.py ` file and adding the following lines to the `ur_control_node` definition:
-```python
-    # Remap for force/torque sensor
-    ur_control_node = Node(
-        package="ur_robot_driver",
-        executable="ur_ros2_control_node",
-        parameters=[
-            robot_description,
-            update_rate_config_file,
-            ParameterFile(initial_joint_controllers, allow_substs=True),
-        ],
-        ## ADD THIS PART
-        remappings=[
-            ("/cartesian_motion_controller/target_frame", "/target_frame"),
-            ("/cartesian_compliance_controller/target_frame", "/target_frame"),
-            ("/cartesian_compliance_controller/ft_sensor_wrench","/force_torque_sensor_broadcaster/wrench"),
-            ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
-            ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
-            ("/cartesian_force_controller/target_frame", "/target_frame"),
-            ("/motion_control_handle/target_frame", "/target_frame"),
-        ],
-        ##
-        output="screen",
-        condition=UnlessCondition(use_fake_hardware),
-    )
-```
 
 ## 🚀 Start controlling the robot
 1. Put the robot in `Remote Control` mode from the teach pendant (tablet) pressing `Top left options button`->`Local`->`Remote Control`
@@ -107,9 +81,16 @@ For a simple simulation of your executable, you can easily use a fake hardware c
 ros2 launch easy_ur_control easy_ur_launcher.launch.py use_fake_hardware:=true ur_type:=<ur_type>  # and additional arguments
 ```
 
-**Note:** if you want to correctly use the cartesian control with the fake hardware, you must set the corresponding remappings in the `control_node` definition in `/opt/ros/humble/share/ur_robot_driver/launch/ur_control.launch.py`;
+## 💻 Some infos for the developers
+
+To simplify the launch of the UR robots with the [recommended cartesian controllers](https://github.com/fzi-forschungszentrum-informatik/cartesian_controllers), when connected with the real robot and using the *fake hardware*, some topic remappings have been put in place.
+
+This requires the modification of the file `/opt/ros/humble/share/ur_robot_driver/launch/ur_control.launch.py` shipped by the `ur_robot_driver` package; to avoid end user to modify (using `sudo` 😅) the file on their machine, a local copy of [`ur_control.launch.py`](./launch/ur_control.launch.py) is present in this repository and is loaded by default in the [`easy_ur_launcher.launch.py`](./launch/easy_ur_launcher.launch.py) file.
+
+The required mappings are
 
 ```python
+    ...
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
@@ -118,7 +99,6 @@ ros2 launch easy_ur_control easy_ur_launcher.launch.py use_fake_hardware:=true u
             update_rate_config_file,
             ParameterFile(initial_joint_controllers, allow_substs=True),
         ],
-        # Import these mappings:
         remappings=[
             ("/cartesian_motion_controller/target_frame", "/target_frame"),
             ("/cartesian_compliance_controller/target_frame", "/target_frame"),
@@ -131,4 +111,26 @@ ros2 launch easy_ur_control easy_ur_launcher.launch.py use_fake_hardware:=true u
         output="screen",
         condition=IfCondition(use_fake_hardware),
     )
+    ...
+    ur_control_node = Node(
+        package="ur_robot_driver",
+        executable="ur_ros2_control_node",
+        parameters=[
+            robot_description,
+            update_rate_config_file,
+            ParameterFile(initial_joint_controllers, allow_substs=True),
+        ],
+        remappings=[
+            ("/cartesian_motion_controller/target_frame", "/target_frame"),
+            ("/cartesian_compliance_controller/target_frame", "/target_frame"),
+            ("/cartesian_compliance_controller/ft_sensor_wrench","/force_torque_sensor_broadcaster/wrench"),
+            ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
+            ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
+            ("/cartesian_force_controller/target_frame", "/target_frame"),
+            ("/motion_control_handle/target_frame", "/target_frame"),
+        ],
+        output="screen",
+        condition=UnlessCondition(use_fake_hardware),
+    )
+    ...
 ```

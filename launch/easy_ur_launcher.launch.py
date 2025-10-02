@@ -80,7 +80,7 @@ def launch_setup(context, *args, **kwargs):
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
                 [
-                    FindPackageShare("ur_robot_driver"),
+                    FindPackageShare("easy_ur_control"),
                     "launch",
                     "ur_control.launch.py",
                 ]
