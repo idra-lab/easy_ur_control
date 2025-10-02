@@ -9,6 +9,12 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <depend>ur_robot_driver</depend>
+  <depend>ur_description</depend>
+  <depend>ur_calibration</depend>
+  <depend>ur_controllers</depend>
+  <depend>ur_msgs</depend>
+
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
