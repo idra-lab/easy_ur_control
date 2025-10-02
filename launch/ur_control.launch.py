@@ -29,6 +29,9 @@
 #
 # Author: Denis Stogl
 
+import os.path
+from ament_index_python.packages import get_package_share_path
+
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterFile, ParameterValue
 from launch_ros.substitutions import FindPackageShare
@@ -82,6 +85,7 @@ def launch_setup(context, *args, **kwargs):
     reverse_port = LaunchConfiguration("reverse_port")
     script_sender_port = LaunchConfiguration("script_sender_port")
     trajectory_port = LaunchConfiguration("trajectory_port")
+    initial_positions_file = LaunchConfiguration("initial_positions_file")
 
     joint_limit_params = PathJoinSubstitution(
         [FindPackageShare(description_package), "config", ur_type, "joint_limits.yaml"]
@@ -198,6 +202,8 @@ def launch_setup(context, *args, **kwargs):
             "trajectory_port:=",
             trajectory_port,
             " ",
+            "initial_positions_file:=",
+            initial_positions_file
         ]
     )
     robot_description = {
@@ -674,6 +680,16 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "trajectory_port",
             default_value="50003",
+            description="Port that will be opened for trajectory control.",
+        )
+    )
+    initial_positions_file_default = os.path.join(
+            get_package_share_path("easy_ur_control"), "config", "initial_positions.yaml"
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "initial_positions_file",
+            default_value=initial_positions_file_default,
             description="Port that will be opened for trajectory control.",
         )
     )
