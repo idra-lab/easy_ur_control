@@ -240,7 +240,6 @@ def launch_setup(context, *args, **kwargs):
             ("/cartesian_compliance_controller/target_frame", "/target_frame"),
             ("/cartesian_compliance_controller/ft_sensor_wrench","/force_torque_sensor_broadcaster/wrench"),
             ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
-            ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
             ("/cartesian_force_controller/target_frame", "/target_frame"),
             ("/motion_control_handle/target_frame", "/target_frame"),
         ],

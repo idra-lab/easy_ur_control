@@ -119,13 +119,6 @@ def launch_setup(context, *args, **kwargs):
         package="controller_manager",
         executable="spawner",
         arguments=[controller, "-c", "/controller_manager"],
-        remappings=[
-            ("/cartesian_motion_controller/target_frame", "/target_frame"),
-            ("/cartesian_compliance_controller/target_frame", "/target_frame"),
-            ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
-            ("/cartesian_compliance_controller/target_wrench", "/target_wrench"),
-            ("/cartesian_force_controller/target_frame", "/target_frame"),
-        ],
     )
 
     return [
