@@ -47,6 +47,7 @@
         name="$(arg ur_type)"
         tf_prefix="$(arg ur_type)_"
         kinematics_parameters_file="$(arg kinematics_parameters_file)"
+        ur_type="$(arg ur_type)"
         robot_ip="$(arg robot_ip)"
         script_filename="$(arg ur_script_filename)"
         output_recipe_filename="$(arg ur_output_recipe_filename)"

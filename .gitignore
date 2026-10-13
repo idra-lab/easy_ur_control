@@ -1,1 +1,4 @@
 config/calibration.yaml
+build/
+install/
+log/
